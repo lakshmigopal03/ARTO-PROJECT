@@ -1,0 +1,269 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - ARTO{% endblock %}
+
+{% block content %}
+<!-- Welcome Header -->
+<section class="bg-primary text-white py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-2">Welcome back, {{ user.first_name|default:user.username }}!</h1>
+                {% if is_artist %}
+                    <p class="mb-0"><i class="fas fa-palette me-2"></i>Artist Dashboard - Manage your art and profile</p>
+                {% else %}
+                    <p class="mb-0">Ready to discover amazing artworks today?</p>
+                {% endif %}
+            </div>
+            <div class="col-md-4 text-end">
+                <small class="text-white-75">Member since {{ user.date_joined|date:"M Y" }}</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dashboard Stats -->
+<section class="py-4 bg-light">
+    <div class="container">
+        {% if is_artist %}
+            <!-- Artist Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 bg-success text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-images fa-2x mb-2"></i>
+                            <h4 class="fw-bold">{{ stats.artworks }}</h4>
+                            <small>Artworks</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 bg-info text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-eye fa-2x mb-2"></i>
+                            <h4 class="fw-bold">0</h4>
+                            <small>Profile Views</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 bg-warning text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-dollar-sign fa-2x mb-2"></i>
+                            <h4 class="fw-bold">$0</h4>
+                            <small>Total Sales</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm h-100 bg-danger text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-2x mb-2"></i>
+                            <h4 class="fw-bold">0</h4>
+                            <small>Followers</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        
+        <!-- Regular User Stats -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-heart fa-2x text-danger mb-2"></i>
+                        <h4 class="fw-bold">{{ stats.favorites }}</h4>
+                        <small class="text-muted">Favorites</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shopping-bag fa-2x text-success mb-2"></i>
+                        <h4 class="fw-bold">{{ stats.orders }}</h4>
+                        <small class="text-muted">Orders</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x text-info mb-2"></i>
+                        <h4 class="fw-bold">{{ stats.following }}</h4>
+                        <small class="text-muted">Following</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shopping-cart fa-2x text-warning mb-2"></i>
+                        <h4 class="fw-bold">{{ stats.cart_items }}</h4>
+                        <small class="text-muted">Cart Items</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Dashboard Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Quick Actions -->
+            <div class="col-md-8">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if is_artist %}
+                            <!-- Artist Actions -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-outline-success w-100 py-3">
+                                        <i class="fas fa-upload me-2"></i>Upload Artwork
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{% url 'artist_profile_edit' %}" class="btn btn-outline-primary w-100 py-3">
+                                        <i class="fas fa-edit me-2"></i>Edit Profile
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{% url 'artist_profile_view' artist_profile.pk %}" class="btn btn-outline-info w-100 py-3">
+                                        <i class="fas fa-eye me-2"></i>View My Profile
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-outline-warning w-100 py-3">
+                                        <i class="fas fa-chart-line me-2"></i>View Sales
+                                    </a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <!-- Regular User Actions -->
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-outline-primary w-100 py-3">
+                                        <i class="fas fa-search me-2"></i>Browse Gallery
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{% url 'become_artist' %}" class="btn btn-outline-success w-100 py-3">
+                                        <i class="fas fa-paint-brush me-2"></i>Become an Artist
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-outline-warning w-100 py-3">
+                                        <i class="fas fa-heart me-2"></i>View Favorites
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="#" class="btn btn-outline-info w-100 py-3">
+                                        <i class="fas fa-user me-2"></i>Edit Profile
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if is_artist %}
+                    <!-- Artist Profile Summary -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0"><i class="fas fa-palette me-2"></i>Artist Profile Status</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    {% if artist_profile.profile_image %}
+                                        <img src="{{ artist_profile.profile_image.url }}" class="rounded-circle" width="80" height="80">
+                                    {% else %}
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <h5 class="mb-1">{{ artist_profile.artist_name }}</h5>
+                                    <p class="text-muted mb-1">{{ artist_profile.get_specialty_display }}</p>
+                                    {% if artist_profile.is_verified %}
+                                        <span class="badge bg-success">Verified Artist</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending Verification</span>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="{% url 'artist_profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-md-4">
+                <!-- Recent Activity -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Activity</h6>
+                    </div>
+                    <div class="card-body">
+                        {% for activity in recent_activities %}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                    <i class="fas fa-user-circle text-primary"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="small fw-bold">{{ activity.action }}</div>
+                                <div class="small text-muted">{{ activity.item }}</div>
+                                <div class="small text-muted">{{ activity.time }}</div>
+                            </div>
+                        </div>
+                        {% if not forloop.last %}<hr class="my-2">{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Profile Summary -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h6 class="mb-0"><i class="fas fa-user me-2"></i>Profile Summary</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            {% if is_artist and artist_profile.profile_image %}
+                                <img src="{{ artist_profile.profile_image.url }}" class="rounded-circle" width="60" height="60">
+                            {% else %}
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" 
+                                     class="rounded-circle" width="60" height="60" alt="Profile">
+                            {% endif %}
+                        </div>
+                        <h6 class="fw-bold">{{ user.first_name }} {{ user.last_name }}</h6>
+                        <small class="text-muted">@{{ user.username }}</small>
+                        {% if is_artist %}
+                            <br><small class="text-success fw-bold">Artist Account</small>
+                        {% endif %}
+                        <div class="mt-3">
+                            {% if is_artist %}
+                                <a href="{% url 'artist_profile_edit' %}" class="btn btn-outline-primary btn-sm">Edit Artist Profile</a>
+                            {% else %}
+                                <a href="{% url 'become_artist' %}" class="btn btn-outline-success btn-sm">Become an Artist</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
